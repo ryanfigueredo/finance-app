@@ -5,10 +5,23 @@ import {
     GetUserByIdController,
     UpdateUserController,
 } from './src/controllers/index.js'
+import { PostgresGetUserByIdRepository } from './src/repositories/postgres/get-user-by-id.js'
 
 const app = express()
 
 app.use(express.json())
+
+app.get('/api/users/:userId', async (request, response) => {
+    const getUserByIdRepository = new PostgresGetUserByIdRepository()
+
+    const getUserByIdUseCase = new GetUserByIdUseCase(getUserByIdRepository)
+
+    const getUserByIdController = new GetUserByIdController(getUserByIdUseCase)
+
+    const { statusCode, body } = await getUserByIdController.execute(request)
+
+    response.status(statusCode).send(body)
+})
 
 app.post('/api/users', async (request, response) => {
     const createUserController = new CreateUserController()
@@ -22,14 +35,6 @@ app.patch('/api/users/:userId', async (request, response) => {
     const updateUserController = new UpdateUserController()
 
     const { statusCode, body } = await updateUserController.execute(request)
-
-    response.status(statusCode).send(body)
-})
-
-app.get('/api/users/:userId', async (request, response) => {
-    const getUserByIdController = new GetUserByIdController()
-
-    const { statusCode, body } = await getUserByIdController.execute(request)
 
     response.status(statusCode).send(body)
 })
