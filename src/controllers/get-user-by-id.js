@@ -5,7 +5,7 @@ import {
     ok,
     serverError,
 } from './helpers/index.js'
-import { GetUserByIdRepository } from '../'
+import { GetUserByIdRepository } from '../repositories/get-user-by-id.js'
 import { PostgresGetUserByIdRepository } from '../repositories/postgres/get-user-by-id.js'
 
 export class GetUserByIdController {
